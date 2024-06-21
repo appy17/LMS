@@ -31,11 +31,10 @@ import BrokerLedger from "./components/BrokerLedger";
 import ContractorTransaction from "./components/ContractorTransaction";
 import BrokerTransaction from "./components/BrokerTransaction";
 import Profile from "./components/Profile";
+import HoldedPlots from "./components/HoldedPlots";
 
 const App = () => {
   const [isLoggedIn, setLoggedIn] = useState(false);
-
-
 
 
   const handleLogin = () => {
@@ -326,11 +325,6 @@ const App = () => {
               }
             />
             <Route
-            path="/holdedplots"
-            element={<HoldedPlots/>}
-            />
-{/*           </> */}
-            <Route
               path="/historicalreport"
               element={
                 <>
@@ -407,6 +401,10 @@ const App = () => {
                   <Profile />{" "}
                 </>
               }
+            />
+            <Route
+            path="/holdedplots"
+            element={<HoldedPlots/>}
             />
           </>
         )}

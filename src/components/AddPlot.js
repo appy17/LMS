@@ -81,7 +81,7 @@ const AddPlot = () => {
     try {
       const response = await axios.get(
         // "https://lkgexcel.com/backend/getprojects.php"
-        "http://localhost.com/backend_lms/getprojects.php"
+        "http://localhost/backend_lms/getprojects.php"
       );
       setProjects(response.data);
     } catch (error) {
@@ -311,7 +311,7 @@ const AddPlot = () => {
     e.preventDefault();
 
     // const url = "https://lkgexcel.com/backend/editplot.php";
-    const url = "http://localhost/backend/editplot.php";
+    const url = "http://localhost/backend_lms/editplot.php";
     const formData = new FormData();
 
     formData.append("id", editFormData.id);
@@ -365,19 +365,53 @@ const AddPlot = () => {
     }
   };
 
-  const handleupdatePlotRate = () => {
-    console.log("updated plot rate", updatePlotRate);
-    setUpadtePlotRate("");
-    const AvailablePlot = filteredMaster.filter(
-      (item) => item.plotStatus === "Available"
-    );
-    // console.log("filter", AvailablePlot)
+  // const handleupdatePlotRate = () => {
+  //   console.log("updated plot rate", updatePlotRate);
+  //   setUpadtePlotRate("");
+  //   const AvailablePlot = filteredMaster.filter(
+  //     (item) => item.plotStatus === "Available"
+  //   );
+  //   // console.log("filter", AvailablePlot)
 
-    const newfilter = AvailablePlot.map(
-      (item) => (item.ratePerSqft = updatePlotRate)
-    );
-    console.log(newfilter);
+  //   const newfilter = AvailablePlot.map(
+  //     (item) => (item.ratePerSqft = updatePlotRate)
+  //   );
+  //   console.log(newfilter);
+  // };
+
+
+  //   const[fData, setfdata] = useState('')
+
+  // const handleRateChange = (e)=>{
+  
+  //   const { name, value } = e.target;
+  //   setfdata((prevData) => ({ ...prevData, [name]: value }));
+  
+  // }
+
+
+  const handleupdatePlotRate = async() => {
+    
+      try {
+        console.log("hey, here is coming");
+        console.log(" this is updated PlotRate",updatePlotRate);
+        
+        const response = await axios.post("http://localhost/backend_lms/editPlotRate.php",{updatePlotRate});
+        console.log( response.data);
+        console.log("run 2");
+
+      } catch (error) {
+
+        console.log(error);
+        
+      }   
+    
+
+  
   };
+
+
+
 
   useEffect(() => {
     fetchDataProject();

@@ -22,7 +22,6 @@ import { AiOutlineClose } from "react-icons/ai";
 import { FaChevronDown } from "react-icons/fa";
 import { RiFlashlightFill } from "react-icons/ri";
 import ProfileDropdown from "./components/ProfileDropdown";
-import HoldedPlots from "./components/HoldedPlot";
 
 const Nav = ({ isLoggedIn, handleLogout }) => {
   const navigate = useNavigate();
@@ -107,8 +106,8 @@ const Nav = ({ isLoggedIn, handleLogout }) => {
               <MenuList>
                 <MenuItem as={Link} to="/bookingstatus">
                   Booking Status
-                </MenuItem>
-                <MenuItem as={Link} to="/HoldedPlots">
+                </MenuItem >
+                <MenuItem as={Link} to="/holdedplots" >
                 On-Hold Plots
                 </MenuItem>
                 <MenuItem as={Link} to="/newbooking">

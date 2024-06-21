@@ -690,7 +690,7 @@
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {filteredBookings.map((data, index) => (
+                    { selectedProject.length>0  && filteredBookings.map((data, index) => (
                       <Tr key={data.srNo}>
                         <Td
                           border="1px solid black"
@@ -867,6 +867,7 @@
                           ))}
                       </Tr>
                     ))}
+                   {  selectedProject.length>0?
                     <Tr>
                       <Td colSpan={10}></Td>
                       <Td
@@ -876,7 +877,7 @@
                         color={"white"}
                         fontWeight={"bold"}
                       >
-                        Total : {calculateTotalReceived(filteredBookings)}
+                        Total : {selectedProject.length>0  && calculateTotalReceived(filteredBookings)}
                       </Td>
 
                       <Td
@@ -886,7 +887,7 @@
                         color={"white"}
                         fontWeight={"bold"}
                       >
-                        Total : {calculateBankReceived(filteredBookings)}
+                        Total : {selectedProject.length>0  && calculateBankReceived(filteredBookings)}
                       </Td>
 
                       <Td
@@ -896,9 +897,10 @@
                         color={"white"}
                         fontWeight={"bold"}
                       >
-                        Total : {calculateCashReceived(filteredBookings)}
+                        Total : {selectedProject.length>0  && calculateCashReceived(filteredBookings)}
                       </Td>
-                    </Tr>
+                    </Tr>:" "
+  }
                   </Tbody>
                 </TableContainer>
               </Table>

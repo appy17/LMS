@@ -339,6 +339,7 @@ const BrokerLedger = () => {
                   </Checkbox>
                 </MenuItem>
               ))}
+              
             </MenuList>
           </Menu>
           <Button ml={2} onClick={clearFilters} colorScheme="red">
@@ -362,6 +363,26 @@ const BrokerLedger = () => {
             </Text>
             <Table variant="simple" size={"md"}>
               <TableContainer>
+
+
+                              
+                <Thead>
+                  <Tr bg="gray.800" >
+                  <Th color="white" bg={"white"}></Th>
+                  <Th color="white"  bg={"white"}></Th>
+                  <Th color="white" bg={"white"}></Th>
+                  <Th color="white" bg={"white"}></Th>
+                  <Th color="white" bg={"white"}></Th>
+                  <Th color="white" bg={"white"}></Th>
+                  <Th color="white" bg={"white"}></Th>
+                  <Th color="white"> {selectedContractor.length>0 ? <p style={{ color: "yellow" }}>{finalPable}</p> : "0"} </Th>
+                  <Th color="white">{selectedContractor.length>0 ? <p style={{ color: "yellow" }}>{finalPaid}</p> : "0"}   </Th>
+                  <Th color="white">{selectedContractor.length>0 ? <p style={{ color: "yellow" }}>{finalBalance}</p> : "0"}   </Th>
+
+                </Tr>
+                </Thead>
+
+
                 <Thead>
                   <Tr border="1px solid black" bg={"#121212"}>
                     <Th border="1px solid black" color={"white"} p={"26px"}>
@@ -407,14 +428,8 @@ const BrokerLedger = () => {
                         }}
                       >
                         <p>Total Payable</p>
-                        <p
-                          style={{
-                            margin: "0 10px 0 10px",
-                          }}
-                        >
-                          :-
-                        </p>
-                        <p style={{ color: "yellow" }}>{finalPable}</p>
+                      
+                        {/* <p style={{ color: "yellow" }}>{finalPable}</p> */}
                       </div>
                     </Th>
                     <Th border="1px solid black" color={"white"} p={"26px"}>
@@ -427,14 +442,8 @@ const BrokerLedger = () => {
                         }}
                       >
                         <p>Total Paid</p>
-                        <p
-                          style={{
-                            margin: "0 10px 0 10px",
-                          }}
-                        >
-                          :-
-                        </p>
-                        <p style={{ color: "yellow" }}>{finalPaid}</p>
+                       
+                        {/* <p style={{ color: "yellow" }}>{finalPaid}</p> */}
                       </div>
                     </Th>
                     <Th border="1px solid black" color={"white"} p={"26px"}>
@@ -447,14 +456,8 @@ const BrokerLedger = () => {
                         }}
                       >
                         <p>Total Bal</p>
-                        <p
-                          style={{
-                            margin: "0 10px 0 10px",
-                          }}
-                        >
-                          :-
-                        </p>
-                        <p style={{ color: "yellow" }}>{finalBalance}</p>
+                       
+                        {/* <p style={{ color: "yellow" }}>{finalBalance}</p> */}
                       </div>
                     </Th>
                     {/* <Th border="1px solid black" color={"white"} p={"26px"}>
@@ -467,7 +470,7 @@ const BrokerLedger = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {filteredBookings.map((data, index) => (
+                  {selectedContractor.length>0 && filteredBookings.map((data, index) => (
                     <Tr key={data.srNo}>
                       <Td border="1px solid black">{index + 1}</Td>
                       <Td border="1px solid black">{data.broker}</Td>

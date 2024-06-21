@@ -331,6 +331,8 @@ const NewBooking = () => {
     }
   };
 
+  const[myValue, setMyValue]= useState("")    //******************************************************
+
   const onSelectPlot = async (pno) => {
     let query =
       "SELECT * FROM plot where blockName = '" +
@@ -367,14 +369,19 @@ const NewBooking = () => {
 
           if (response1 && response1.data) {
             if (response1.data.phpresult) {
-              setMaster("masterData : ", response1.data.phpresult);
+              setMaster(response1.data?.phpresult);
 
               document.getElementById("registryGender").value = "Male";
+              console.log("MasterData", response1.data?.phpresult)
 
+
+// *********************************************************************************************
               // document.getElementById('plotType').style.backgroundColor = 'gray';
               // document.getElementById('plotType').disabled = true;
               // document.getElementById("plotType").value =
-              //   response.data.phpresult[0]["plotType"];
+               setMyValue( response.data.phpresult[0]["plotType"]);
+
+// ********************************************************************************************************
               document.getElementById("areaSqft").value =
                 response.data.phpresult[0]["areaSqft"];
               document.getElementById("rateAreaSqft").value =
@@ -486,6 +493,9 @@ const NewBooking = () => {
     }
   };
 
+  const[Render,setRender] = useState(false)
+
+
   const updateOnChange = () => {
     document.getElementById("totalAmount").value =
       document.getElementById("areaSqft").value *
@@ -493,16 +503,17 @@ const NewBooking = () => {
     document.getElementById("netAmount").value =
       document.getElementById("totalAmount").value;
 
-    if (document.getElementById("discountApplicable").value == "Yes") {
-      document.getElementById("netAmount").value =
-        document.getElementById("totalAmount").value -
-        (document.getElementById("totalAmount").value / 100) *
-          document.getElementById("discountPercent").value;
-    } else if (document.getElementById("discountApplicable").value == "No") {
-      document.getElementById("discountPercent").value = 0;
-      document.getElementById("netAmount").value =
-        document.getElementById("totalAmount").value;
-    }
+
+    // if (document.getElementById("discountApplicable").value == "Yes") {
+    //   document.getElementById("netAmount").value =
+    //     document.getElementById("totalAmount").value -
+    //     (document.getElementById("totalAmount").value / 100) *
+    //       document.getElementById("discountPercent").value;
+    // } else if (document.getElementById("discountApplicable").value == "No") {
+    //   document.getElementById("discountPercent").value = 0;
+    //   document.getElementById("netAmount").value =
+    //     document.getElementById("totalAmount").value;
+    // }
 
     {
       // This is Previous
@@ -510,14 +521,55 @@ const NewBooking = () => {
       //   plotData[0]["areaSqmt"] * master[0]["guideline"];
     }
 
-    if (document.getElementById("registryGender").value == "Male") {
-      document.getElementById("registryPercent").value =
-        master[0]["registryMalePercent"];
-    }
-    if (document.getElementById("registryGender").value == "Female") {
-      document.getElementById("registryPercent").value =
-        master[0]["registryFemalePercent"];
-    }
+    // if (document.getElementById("registryGender").value == "Male") {
+    //   document.getElementById("registryPercent").value =
+    //     master[0]["registryMalePercent"];
+    // }
+    // if (document.getElementById("registryGender").value == "Female") {
+    //   document.getElementById("registryPercent").value =
+    //     master[0]["registryFemalePercent"];
+    // }
+
+// *****************************************************************88
+
+
+if (document.getElementById("registryGender").value == "Male" && document.getElementById("discountApplicable").value == "Yes") {
+ 
+  // setPercent(master[0].registryMalePercent)
+  // console.log("call male", master[0].registryMalePercent);
+  document.getElementById("discountPercent").value =
+    master[0]?.registryMalePercent;
+    document.getElementById("netAmount").value =
+    document.getElementById("totalAmount").value -
+    (document.getElementById("totalAmount").value / 100) *
+      document.getElementById("discountPercent").value;
+
+
+  // document.getElementById("registryPercent").value =
+  //   master[0]?.registryMalePercent;
+  //   setRender((prev) => !prev)
+}
+
+
+if (document.getElementById("registryGender").value == "Female" && document.getElementById("discountApplicable").value == "Yes") {
+  // setPercent(master[0].registryFemalePercent)
+  // console.log("call female", master[0].registryFemalePercent);
+  document.getElementById("discountPercent").value =
+    master[0]?.registryFemalePercent;
+
+    document.getElementById("netAmount").value =
+    document.getElementById("totalAmount").value -
+    (document.getElementById("totalAmount").value / 100) *
+      document.getElementById("discountPercent").value;
+  // document.getElementById("registryPercent").value =
+  //   master[0]?.registryFemalePercent;
+  //   setRender((prev) => !prev)
+}
+
+
+
+
+// **************************************************************************
 
     // this is for previous
     //  { document.getElementById("registryAmount").value =
@@ -675,7 +727,7 @@ const NewBooking = () => {
                 })}
               </Select>
             </FormControl>
-
+{/* 
             <FormControl>
               <FormLabel>Plot Type</FormLabel>
               <Select
@@ -684,6 +736,8 @@ const NewBooking = () => {
                 value={plottype}
                 onChange={(e) => {
                   setplottype(e.target.value);
+                  // onSelectPlottype(e.target.value);
+                  // updateOnChange();
                 }}
                 //onChange={handleChange}
                 required
@@ -691,6 +745,9 @@ const NewBooking = () => {
                 <option value="" disabled>
                   Select Plot Type
                 </option>
+
+                 
+
 
                 <option key="Normal" value="Normal">
                   Normal
@@ -713,8 +770,23 @@ const NewBooking = () => {
                 <option key="5BHK" value="5BHK">
                   5BHK
                 </option>
+
+
+
               </Select>
+            </FormControl> */}
+
+            <FormControl>
+              <FormLabel>Plot Type</FormLabel>
+              <Input
+                onChange={updateOnChange}
+                  id="plotType"
+                  value={myValue}
+                type="text"
+                required
+              />
             </FormControl>
+
 
             <FormControl>
               <FormLabel>Customer Name</FormLabel>

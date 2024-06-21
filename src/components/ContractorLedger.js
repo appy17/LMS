@@ -193,6 +193,7 @@ let finalBalance = 0;
 
   return (
     <>
+
       <Center>
         <Heading size={"md"}>Contractor Ledger</Heading>
       </Center>
@@ -200,6 +201,8 @@ let finalBalance = 0;
         <Flex justifyContent={"space-evenly"}>
 
   {/* contractor select tag */}
+     
+ 
   <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
               Select Contractors
@@ -371,11 +374,31 @@ let finalBalance = 0;
           </Flex>
         ) : (
           <>
+
+
+
             <Text p={5} fontWeight={"bold"}>
           {selectedContractor.length>0 &&  <div>Count :- {filteredBookings.length}</div>}   
             </Text>
             <Table variant="simple" >
+
               <TableContainer>
+
+            <Thead>
+              <Tr bg="gray.800" >
+              <Th color="white" bg={"white"}></Th>
+              <Th color="white"  bg={"white"}></Th>
+              <Th color="white" bg={"white"}></Th>
+              <Th color="white" bg={"white"}></Th>
+              <Th color="white" bg={"white"}></Th>
+              <Th color="white" bg={"white"}></Th>
+              <Th color="white"> {selectedContractor.length>0 ? <p style={{ color: "yellow" }}>{finalPable}</p> : "0"} </Th>
+              <Th color="white">{selectedContractor.length>0 ? <p style={{ color: "yellow" }}>{finalPaid}</p> : "0"}   </Th>
+              <Th color="white">{selectedContractor.length>0 ? <p style={{ color: "yellow" }}>{finalBalance}</p> : "0"}   </Th>
+
+            </Tr>
+            </Thead>
+
                 <Thead>
                   <Tr border="1px solid black" bg={"#121212"}>
                     <Th border="1px solid black" color={"white"} p={"22px"}>
@@ -417,7 +440,7 @@ let finalBalance = 0;
                           :-
                         </p>
                        
-                        {selectedContractor.length>0 ? <p style={{ color: "yellow" }}>{finalPable}</p> : "0"} 
+                        {/* {selectedContractor.length>0 ? <p style={{ color: "yellow" }}>{finalPable}</p> : "0"}  */}
                         
                       </div>
                     </Th>
@@ -433,15 +456,9 @@ let finalBalance = 0;
                         }}
                       >
                         <p>Total Amt Paid</p>
-                        <p
-                          style={{
-                            margin: "0 10px 0 10px",
-                          }}
-                        >
-                          :-
-                        </p>
+                       
                         {/* <p style={{ color: "yellow" }}>{finalPaid}</p> */}
-                        {selectedContractor.length>0 ? <p style={{ color: "yellow" }}>{finalPaid}</p> : "0"}    
+                        {/* {selectedContractor.length>0 ? <p style={{ color: "yellow" }}>{finalPaid}</p> : "0"}     */}
                       </div>
                     </Th>
                    
@@ -456,13 +473,7 @@ let finalBalance = 0;
                         }}
                       >
                         <p>Total Amt Bal</p>
-                        <p
-                          style={{
-                            margin: "0 10px 0 10px",
-                          }}
-                        >
-                          :-
-                        </p>
+                       
              {selectedContractor.length>0 ? <p style={{ color: "yellow" }}>{finalBalance}</p> : "0"}          
                       </div>
                     </Th>

@@ -22,6 +22,8 @@ import {
   Input,
   FormLabel,
   Radio,
+  useToast,
+
 } from "@chakra-ui/react";
 import axios, { all } from "axios";
 import { ChevronDownIcon } from "@chakra-ui/icons";
@@ -41,6 +43,8 @@ const BookingList = () => {
   const [constructionApplicable, setConstructionApplicable] = useState("All");
   const [constructors, setConstructors] = useState([]);
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
+  const toast = useToast();
+
 
   const [selectContructor, setSelectConstructor] = useState(["All"]);
 
@@ -270,9 +274,96 @@ const BookingList = () => {
 
   console.log("All Totle : ", allTotle);
 
-  const handleTally = (props) => {
+  const handleTally = async(props) => {
+
+    
     console.log("tallydata", props);
+
+
+    // const url = "https://lkgexcel.com/backend/editplot.php";
+    const url = "http://localhost/backend_lms/.php";
+    const formData = new FormData();
+
+    formData.append("id", props.id);
+    formData.append("projectName", props.projectName);
+    formData.append("blockName", props.blockName);
+    formData.append("bookingDate", props.bookingDate);
+    formData.append("bankAmountPayable", props.bankAmountPayable);
+    formData.append("areaSqft", props.areaSqft);
+    formData.append("broker", props.broker);
+    formData.append("cashAmountPayable", props.cashAmountPayable);
+    formData.append("constructionAmount", props.constructionAmount);
+    formData.append("constructionApplicable", props.constructionApplicable);
+    formData.append("constructionContractor", props.constructionContractor);
+    formData.append("customerAddress", props.customerAddress);
+    formData.append("customerContact", props.customerContact);
+    formData.append("customerName", props.customerName);
+    formData.append("discountApplicable", props.discountApplicable);
+    formData.append("discountPercent", props.discountPercent);
+    formData.append("grandTotal", props.grandTotal);
+    formData.append("guidelineAmount", props.guidelineAmount);
+    formData.append("maintenanceAmount", props.maintenanceAmount);
+    formData.append("miscAmount", props.miscAmount);
+    formData.append("netAmount", props.netAmount);
+    formData.append("plotNo", props.plotNo);
+    formData.append("plotType", props.plotType);
+    formData.append("rateAreaSqft", props.rateAreaSqft);
+    formData.append("registryAmount", props.registryAmount);
+    formData.append("registryGender", props.registryGender);
+    formData.append("registryPercent", props.registryPercent);
+    formData.append("remarks", props.remarks);
+    formData.append("serviceAmount", props.serviceAmount); 
+    formData.append("totalAmount", props.totalAmount);
+    formData.append("totalAmountPayable", props.totalAmountPayable);
+    // formData.append("plotType", props.);
+ 
+
+    try {
+      const response = await axios.update(url, formData);
+
+      if (response && response.data && response.data.status === "success") {
+        console.log(" successfully:", response.data.message);
+        toast({
+          title: "updated successfully!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+
+        // fetchDataPlot();
+      } else {
+        console.error("Error :", response.data.message);
+        toast({
+          title: "Error ",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+
+      }
+    } catch (error) {
+      console.error("Error in handleEdit:", error);
+      toast({
+        title: "Error",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+
+    }
   };
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <>

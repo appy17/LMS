@@ -21,20 +21,29 @@ import {
   Select,
   FormLabel,
   Heading,
-  Toast,
+  useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  FormControl,
 } from "@chakra-ui/react";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import React from "react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
-// import https from 'https';
-
 const BookingStatus = () => {
   const [bookings, setBooking] = useState([]);
   const [status, setStatus] = useState([]);
   const [date, setDate] = useState([]);
-
+  const [onholdPlot, setOnholdPlot] = useState({})
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedProject, setSelectedProject] = useState([]);
   const [selectedBlock, setSelectedBlock] = useState([]);
   const [selectedPlot, setSelectedPlot] = useState([]);
@@ -45,9 +54,31 @@ const BookingStatus = () => {
   
   const [highlightedRow, setHighlightedRow] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [count, setCount] = useState(null);
-  // const [onAddHold, setAddHold] = useState();
+  const [count, setCount] = useState(null)
+ const [totalArea, setTotalArea] = useState(0)
+ const [totalAreamt, setTotalAreamt] = useState(0);
+ const toast = useToast();
+
+
+
+ const [formData, setFormData] = useState({
  
+  customerName:"",
+  contactNo:"",
+  remarks:"",
+  address:""
+
+});
+
+
+
+
+  const getDate = new Date()
+  const day = getDate.getDate();
+  const month = getDate.getMonth() + 1; // Months are zero-indexed, so January is 0
+  const year = getDate.getFullYear();
+  const TodayDate = `${day}/${month}/${year}`
+
  
 // render no project function 
 function initialFunction (){
@@ -73,8 +104,8 @@ if(selectedProject.length>0){
 
   const loadBooking = async () => {
     let query = "SELECT * FROM booking;";
-
-    const url = "http://localhost/backend_lms/getQuery.php";
+   const url = "http://localhost/backend_lms/getQuery.php"
+    // const url = "https://lkgexcel.com/backend/getQuery.php";
     let fData = new FormData();
 
     fData.append("query", query);
@@ -102,7 +133,9 @@ if(selectedProject.length>0){
   const loadDate = async () => {
     let query = "SELECT registryDate FROM registry;";
 
+    // const url = "https://lkgexcel.com/backend/getQuery.php";
     const url = "http://localhost/backend_lms/getQuery.php";
+
     let fData = new FormData();
 
     fData.append("query", query);
@@ -127,7 +160,8 @@ if(selectedProject.length>0){
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost/backend_lms/getplot.php"
+         "http://localhost/backend_lms/getplot.php"
+        // "https://lkgexcel.com/backend/getplot.php"
       );
       setBooking(response.data);
       setCount(filteredBookings.length)
@@ -138,7 +172,6 @@ if(selectedProject.length>0){
       setLoading(false);
     }
   };
-
 
   const formatDate = (dateString) => {
     const [year, month, day] = dateString.split('-');
@@ -157,7 +190,7 @@ console.log("status",status)
 
 
   const getUniqueValues = (key) => {
-    return [...new Set(bookings.map((item) => item[key]))];
+    return [...new Set(bookings.map((item) => item[key]))];//
   };
 
   const projectOptions = getUniqueValues("projectName");
@@ -207,51 +240,145 @@ const plotStatus = getUniqueValues("plotStatus");
     setSelectedToDate("")
   }, []);
 
- console.log("render")
- console.log("select", selectedFromDate)
 
- const url = "http://localhost/backend_lms/addhold.php"
- console.log('vaibhav',filteredBookings[highlightedRow])  //dataAlready Existing;
+  useEffect(()=> {
+    const totalSQFT = filteredBookings.reduce((accumulator, currentItem) => {
+      return accumulator + Number(currentItem.areaSqft);
+    }, 0);
+    setTotalArea(totalSQFT)
+    const totalSMT = filteredBookings.reduce((accumulator, currentItem) => {
+      return accumulator + Number(currentItem.areaSqmt);
+    }, 0);
+    setTotalAreamt(totalSMT)
+  },[filteredBookings])
 
-//  const holdData = ()=>{
+ 
+  // console.log(filteredBookings[1])
+  console.log(filteredBookings[highlightedRow])
+  let data = filteredBookings[highlightedRow];
+  
+  const handleOnHold = (props) => {
+  
+    onOpen()
+    setOnholdPlot(props)
+  }
+  
+  const handleRemain = (e)=>{
+  
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  
+  }
 
-//   const response = axios.post(url, filteredBookings[highlightedRow], 
+
+  const handleEditPlotSubmit = async () => {
     
-//   { 
-//      headers:{
-//       'Content-Type':"application/json"
-//     }, withCredentials: true
-//   }
-//   )
-//  }
+     
 
-const [responseData, setResponseData] = useState(null);
-  const [error, setError] = useState(null);
-  // const [registryBtn, setRegistryBtn] = useState("Change Hold")
+    // const url = "https://lkgexcel.com/backend/editplot.php";
+    const url = "http://localhost/backend_lms/editplot.php";
+    const formData1 = new FormData();
 
-  const sendDataToBackend = async () => {
-
-     const dataToSend = filteredBookings[highlightedRow];
+    formData1.append("id", onholdPlot.id);
+    formData1.append("projectName", onholdPlot.projectName);
+    formData1.append("blockName", onholdPlot.blockName);
+    formData1.append("plotNo", onholdPlot.plotNo);
+    formData1.append("areaSqft", onholdPlot.areaSqft);
+    formData1.append("areaSqmt", onholdPlot.areaSqmt);
+    formData1.append("ratePerSqft", onholdPlot.ratePerSqft);
+    formData1.append("plotType", onholdPlot.plotType);
+    formData1.append("plotStatus", "Hold");
 
     try {
-      const response = await axios.post("http://127.0.0.1/backend_lms/addhold.php", dataToSend,{
+      const response = await axios.post(url, formData1);
+
+      if (response.data.status === "success") {
+        console.log("Plot updated successfully:", response.data.message);
+       
+        toast({
+          title: "Plot updated successfully!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        fetchData();
+
+     
+      } else {
+        console.error("Error updating plot:", response);
+       
+        toast({
+          title: "Error updating plot",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+
+      }
+    } catch (error) {
+      console.error("Error in handleEditPlotSubmit:", error);
+    
+      toast({
+        title: "Error updating plot",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+
+ 
+    }
+  };
+
+  // **********************************************************************************************
+
+  const sendDataToBackend = async (e) => {
+
+
+    e.preventDefault();
+   
+
+    const mergeData = {...formData, ...onholdPlot,...{TodayDate}, plotStatus:"Hold"};
+    console.log( "this is merge data",mergeData);
+
+    try {
+      const response = await axios.post("http://localhost/backend_lms/addhold.php", mergeData,{
         headers: {
           'Content-Type': 'application/json'
-        }
+        }   
         
       });
 
-      // setRegistryBtn("Hold")
-    
-      setResponseData(response.data);
-      console.log('yogesh',response.data)
+     
+      if(response.data.status != "error"){
+        console.log("this is response", response);
+
+      
+        handleEditPlotSubmit();
+        onClose();     
+
+      }else{
+        console.log("this is response", response);
+        toast({
+          title: "Something wrong",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        onClose();
+
+      }
+     
+
     } catch (error) {
-      setError(error.message);
+      console.log("error occur to fetch",error);
     }
    
   } 
 
- 
+  
+
+//****************************************************************************************************
+
   return (
     <>
    
@@ -482,9 +609,23 @@ const [responseData, setResponseData] = useState(null);
         </Center>
       ) : !selectedProject.length>0 ? <Heading textAlign={"center"} position={"relative"} top={100}>Select Project first</Heading> :  (
     <> <FormLabel fontWeight={700} >Total Booking : ({filteredBookings.length})</FormLabel> <Box  w={"100%"}> <Table variant="simple"  w={"100%"} colorScheme="blue">
+  
+
+  <Thead>
+      <Tr bg="gray.800" >
+      <Th color="white" bg={"white"}></Th>
+      <Th color="white"  bg={"white"}></Th>
+      <Th color="white" bg={"white"}></Th>
+      <Th color="white" bg={"white"}></Th>
+        <Th color="white">{totalArea}</Th>
+        <Th color="white">{totalAreamt}</Th>
+      
+      </Tr>
+    </Thead>
+    
     <Thead>
       <Tr bg="gray.800" >
-
+     
         <Th color="white">Sr No.</Th>
         <Th color="white">ProjectName</Th>
         <Th color="white">BlockName</Th>
@@ -517,6 +658,7 @@ const [responseData, setResponseData] = useState(null);
           <Td>{plotItem.areaSqft}</Td>
           <Td>{plotItem.areaSqmt}</Td>
           <Td>{plotItem.plotType}</Td>
+         
           <Td>
         {/* {plotItem.plotStatus !== "Booked" &&  <Badge
               colorScheme={
@@ -527,12 +669,17 @@ const [responseData, setResponseData] = useState(null);
             >
               {plotItem.plotStatus}
             </Badge>}    */}
-            {plotItem.plotStatus === "Booked" && <FormLabel bg={"yellow"} textAlign={"center"} p={"1px"} >{plotItem.plotStatus.toUpperCase()}</FormLabel>}
-            {plotItem.plotStatus === "Available" && <Box> <FormLabel p={"1px"} >{plotItem.plotStatus.toUpperCase()}</FormLabel> {plotItem.plotStatus === "Available" ? <Button size={"xs"} colorScheme='green' onClick={sendDataToBackend}>Change Hold</Button> : <Button size={"xs"} colorScheme="black">Change Available</Button>}   </Box>}
+            {plotItem.plotStatus === "Booked" && <Box display={"flex"} gap={1}> <FormLabel bg={"yellow"} textAlign={"center"}   p={"1px"} >{plotItem.plotStatus.toUpperCase()}</FormLabel> <Box> {plotItem.plotStatus === "Booked" ? <Button size={"xs"} colorScheme='blue' >AP</Button> : <Button size={"xs"} colorScheme="black">AP</Button>}</Box></Box>}
+
+            {plotItem.plotStatus === "Available" && <Box> <FormLabel p={"1px"} display={"flex"} gap={1}>{plotItem.plotStatus.toUpperCase()}   {plotItem.plotStatus === "Available" ? <Button size={"xs"} colorScheme='blue' onClick={()=>handleOnHold(plotItem)}>OH</Button> : <Button size={"xs"} colorScheme="black">Change Available</Button>} </FormLabel>   </Box>}
+
+            {plotItem.plotStatus === "Hold" && <Box> <FormLabel p={"1px"} display={"flex"} gap={1}>{plotItem.plotStatus.toUpperCase()}{plotItem.plotStatus === "Hold" ? <Button size={"xs"} colorScheme='blue'>AV</Button> : <Button size={"xs"} colorScheme="black">Change Available</Button>}</FormLabel>    </Box>}
+
             {plotItem.plotStatus === "Registered" && <FormLabel bg={"green"} p={"1px"} color={"white"} >{plotItem.plotStatus.toUpperCase()}</FormLabel>}
          
           </Td>
-
+         
+         
           {status
             .filter(
               (book) =>
@@ -549,7 +696,7 @@ const [responseData, setResponseData] = useState(null);
               </React.Fragment>
             ))
             }
-           <Td name="regdate">
+           <Td>
             {plotItem.plotStatus === "Registered" && (
               <span>
                 {date.map((rd, index) => (
@@ -566,9 +713,116 @@ const [responseData, setResponseData] = useState(null);
     </Tbody>
   </Table>
   </Box></>
-      )}
+
+
+)}
+
+ {/* ************************************************************************ */}
+
+ 
+      <Modal isOpen={isOpen} onClose={onClose}  >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Add To Hold Plot</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Box display={"flex"} gap={4}>
+
+            <FormControl mb={2}>
+              <FormLabel>PROJECT NAME</FormLabel>
+              <Input placeholder="PROJECT NAME" value={onholdPlot.projectName} />
+            </FormControl>
+            <FormControl mb={2}>
+              <FormLabel>BLOCK NAME</FormLabel>
+              <Input placeholder="BLOCK NAME" value={onholdPlot.blockName} />
+            </FormControl>
+            
+            </Box>
+
+
+            <Box display={"flex"} gap={4}>
+
+            <FormControl mb={2}>
+              <FormLabel>PLOT NAME</FormLabel>
+              <Input placeholder="PLOT NAME" value={onholdPlot.plotNo} />
+            </FormControl>
+            <FormControl mb={2}>
+              <FormLabel>AREASQFT</FormLabel>
+              <Input placeholder="AREASQFT" value={onholdPlot.areaSqft} />
+            </FormControl>
+            
+            </Box>
+            <Box display={"flex"} gap={4}>
+
+            <FormControl mb={2}>
+              <FormLabel>AREASQMT</FormLabel>
+              <Input placeholder="AREASQMT" value={onholdPlot.areaSqmt} />
+            </FormControl>
+            <FormControl mb={2}>
+              <FormLabel>PLOTTYPE</FormLabel>
+              <Input placeholder="PLOTTYPE" value={onholdPlot.plotType} />
+            </FormControl>
+            
+            <FormControl mb={2}>
+              <FormLabel>PLOTSTATUS</FormLabel>
+              <Input placeholder="PLOTTYPE" value={onholdPlot.plotStatus} />
+            </FormControl>
+            
+            </Box>
+            <Box display={"flex"} gap={4}>
+
+            <FormControl mb={2}>
+              <FormLabel>ToDay Date</FormLabel>
+              <Input placeholder="Date" value={TodayDate} onChange={handleRemain}/>
+            </FormControl>
+            <FormControl mb={2}>
+              <FormLabel>CUSTOMER NAME</FormLabel>
+              <Input placeholder="Enter Your NAME" name="customerName" type="text" onChange={handleRemain} value={formData.customerName}/>
+            </FormControl>
+            
+            </Box>
+            <Box display={"flex"} gap={4}>
+
+            {/* <FormControl mb={2}>
+              <FormLabel>ADDRESS</FormLabel>
+              <Input placeholder="ADDRESS" />
+            </FormControl> */}
+            <FormControl mb={2}>
+              <FormLabel>CONTACT NO.</FormLabel>
+              <Input placeholder="Enter Contect No." name="contactNo" type="text" onChange={handleRemain} value={formData.contactNo}/>
+            </FormControl>
+
+            <FormControl mb={2}>
+              <FormLabel>REMARKS</FormLabel>
+              <Input placeholder="Enter Remark" name="remarks" type="text" onChange={handleRemain} value={formData.remarks}/>
+            </FormControl>
+            
+            </Box>
+            <Box display={"flex"} gap={4}>
+
+            <FormControl mb={2}>
+              <FormLabel>ADDRESS</FormLabel>
+              <Input placeholder="Address" type="text" name="address" onChange={handleRemain} value={formData.address}/>
+           
+            </FormControl>
+            
+            </Box>
+          </ModalBody>
+         
+
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button colorScheme='green' onClick={sendDataToBackend}>Hold Plot</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
-  );
+  )
+
+  //   </>
+  // );
 };
 
 export default BookingStatus;

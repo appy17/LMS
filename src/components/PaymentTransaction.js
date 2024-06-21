@@ -1510,15 +1510,20 @@ const PaymentTransaction = () => {
     bankName,
     transactionStatus,
     statusDate,
-    remarks
+    remarks,
+    totalBalance,
+    bankBalance,
+    cashBalance,
+    totalReceived,
+    bankReceived,
+    cashReceived
+   
   ) => {
     const url = "http://localhost/backend_lms/setQuery.php";
 
     // Construct the query to insert the transaction
-    const query = `
-      INSERT INTO transaction (projectName, blockName, plotno, date, paymentType, amount, bankMode, cheqNo, bankName, transactionStatus, statusDate, remarks) 
-      VALUES ('${projectName}', '${blockName}', '${plotNo}', '${date}', '${paymentType}', ${amount}, '${bankMode}', '${cheqNo}', '${bankName}', '${transactionStatus}', '${statusDate}', '${remarks}')
-    `;
+    const query = `INSERT INTO transaction (projectName, blockName, plotno, date, paymentType, amount, bankMode, cheqNo, bankName,transactionStatus,statusDate, remarks,totalBalance,bankBalance,cashBalance,totalReceived,bankReceived,cashReceived) 
+      VALUES ('${projectName}', '${blockName}', '${plotNo}', '${date}', '${paymentType}', ${amount}, '${bankMode}', '${cheqNo}', '${bankName}','${transactionStatus}','${statusDate}','${remarks}','${totalBalance}','${bankBalance}','${cashBalance}','${totalReceived}','${bankReceived}','${cashReceived}')`;
 
     // Construct the update query to subtract the amount from balances
     const updateQuery = `
@@ -1532,18 +1537,22 @@ const PaymentTransaction = () => {
       WHERE projectName = '${projectName}' AND blockName = '${blockName}' AND plotno = '${plotNo}'
       ORDER BY date DESC
       LIMIT 1
-    `;
+       `;
 
     const formData = new FormData();
     formData.append("query", query);
 
+    console.log("formData",formData);
     try {
       // Send the query to insert the transaction
       const response = await axios.post(url, formData);
 
+      console.log("this is responxe", response);
+
       // Send the update query to adjust balances
       formData.set("query", updateQuery);
-      await axios.post(url, formData);
+
+      //  await axios.post(url, formData);
 
       return response.data; // Return the inserted data or success status
     } catch (error) {
@@ -1558,13 +1567,22 @@ const PaymentTransaction = () => {
   const handleTransfer = async () => {
     if (transferData && transactionData[transferData.index]) {
       const selectedRow = transactionData[transferData.index];
-      const fromProject = selectedRow.projectName;
-      const fromBlock = selectedRow.blockName;
-      const fromPlot = selectedRow.plotno;
+      const fromProject =selectedRow.projectName;
+      const fromBlock =  selectedRow.blockName;
+      const fromPlot =    selectedRow.plotno;
+
+      console.log("this is new1", fromProject);          
+      console.log("this is new2", fromBlock);
+      console.log("this is new3", fromPlot);
 
       setTransferProjectName(selectedRow.projectName);
       setTransferBlockName(selectedRow.blockName);
       setTransferPlotName(selectedRow.plotno);
+
+      console.log("this is new1**********", transferProjectName);          
+      console.log("this is new2**********", transferBlockName);
+      console.log("this is new3*******", transferPlotName);
+
 
       const transferRemark = `Transfer to ${transferProjectName} ${transferBlockName} ${transferPlotName}`;
       const receivedRemark = `Received from ${fromProject} ${fromBlock} ${fromPlot}`;
@@ -1573,9 +1591,9 @@ const PaymentTransaction = () => {
       const confirmed = window.confirm(
         `Do you want to transfer this transaction from ${fromProject} ${fromBlock} ${fromPlot} to ${transferProjectName} ${transferBlockName} ${transferPlotName}?`
       );
-
+// ******************************************************************************************************************************
       if (confirmed) {
-        if (fromProject !== transferProjectName) {
+        if (fromProject !== transferProjectName || fromBlock !== transferBlockName || fromPlot != transferPlotName) {
           selectedRow.remarks = transferRemark;
 
           const transferredRow = {
@@ -1585,6 +1603,8 @@ const PaymentTransaction = () => {
             plotno: transferPlotName,
             remarks: receivedRemark,
           };
+
+          console.log("sssssssssssssssssssssssss",transferredRow);
 
           try {
             await insertTransaction(
@@ -1599,7 +1619,15 @@ const PaymentTransaction = () => {
               transferredRow.bankName,
               transferredRow.transactionStatus,
               transferredRow.statusDate,
-              transferredRow.remarks
+              transferredRow.remarks,
+              transferredRow.totalBalance,
+              transferredRow.bankBalance,
+              transferredRow.cashBalance,
+              transferredRow.totalReceived,
+              transferredRow.bankReceived,
+              transferredRow.cashReceived,
+
+
             );
           } catch (error) {
             console.error("Error inserting transferred transaction:", error);
@@ -1653,7 +1681,7 @@ const PaymentTransaction = () => {
         });
 
         // Reload the page
-        window.location.reload();
+        // window.location.reload();
 
         setIsTransferModalOpen(false);
       }
