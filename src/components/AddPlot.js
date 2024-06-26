@@ -391,22 +391,38 @@ const AddPlot = () => {
 
 
   const handleupdatePlotRate = async() => {
+
+
+        const url = "http://localhost/backend_lms/editPlotRate.php";
+    const formData = new FormData();
+
+    formData.append("ratePerSqft", updatePlotRate);
     
       try {
-        console.log("hey, here is coming");
-        console.log(" this is updated PlotRate",updatePlotRate);
         
-        const response = await axios.post("http://localhost/backend_lms/editPlotRate.php",{updatePlotRate});
-        console.log( response.data);
-        console.log("run 2");
+        const response = await axios.post(url,formData);
+
+        if (response && response.data && response.data.status === "success") {
+          console.log("Plot ratePerSqft successfully:",response.data.message);
+          toast({
+            title: "Rate Per Sqft Updated successfully!",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          })
+
+          fetchDataProject();
+          fetchDataPlot();
+          fetchDataBlock();
+          // window.location.reload();
+        }
+
 
       } catch (error) {
 
         console.log(error);
         
       }   
-    
-
   
   };
 
@@ -586,6 +602,7 @@ const AddPlot = () => {
               type="number"
               w={"100%"}
               placeholder="Enter Plot Rate"
+              name="ratePerSqft"
               value={updatePlotRate}
               onChange={(e) => setUpadtePlotRate(e.target.value)}
             />
@@ -598,6 +615,7 @@ const AddPlot = () => {
               Upadte
             </Button>
           </Box>
+          
 
           {/* update plot rate end */}
           {/* <Box>
@@ -655,7 +673,7 @@ const AddPlot = () => {
                 <Heading>Select Your Project First</Heading>
               </Box>
             ) : (
-              currentItems.map((plotItem, index) => (
+            currentItems.map((plotItem, index) => (
                 <Tr key={plotItem.id}>
                   <Td>{index + 1}</Td>
                   <Td>{plotItem.projectName}</Td>

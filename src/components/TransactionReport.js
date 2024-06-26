@@ -580,6 +580,23 @@ const TransactionReport = () => {
             <Table variant="simple">
               <TableContainer>
                 <Thead>
+
+                  {selectedProject.length >0 && 
+                  <Tr>
+                    <Td colSpan={6}></Td>
+                    <Td
+                      textAlign="right"
+                      border="1px solid black"
+                      bg={"#121212"}
+                      color={"white"}
+                      fontWeight={"bold"}
+                    >
+                      {totalAmount}
+                    </Td>
+
+                    <Td colSpan={8}></Td>
+                  </Tr>
+                  }
                   <Tr border="1px solid black" bg={"#121212"}>
                     <Th border="1px solid white" color={"white"}>
                       {" "}
@@ -704,7 +721,7 @@ const TransactionReport = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {filteredBookings.map((data, index) => (
+                  {selectedProject.length > 0 && filteredBookings.map((data, index) => (
                     <Tr
                       key={data.srNo}
                       onClick={() => setSelectedRowIndex(index)}
@@ -792,9 +809,7 @@ const TransactionReport = () => {
                         {data.remarks}
                       </Td>
                       <Td border="1px solid black" p={"10px"}>
-                        <Text color={talliedStatus[index] ? "green" : "red"}>
-                          {talliedStatus[index] ? "Tallied" : "Not Tallied"}
-                        </Text>
+                        {data.TallyStatus}
                       </Td>
                       <Td border="1px solid black" p={"10px"}>
                         <Button
@@ -811,20 +826,7 @@ const TransactionReport = () => {
                       {/* <Td border="1px solid black" p={"10px"}>{data.amount}</Td> */}
                     </Tr>
                   ))}
-                  <Tr>
-                    <Td colSpan={6}></Td>
-                    <Td
-                      textAlign="right"
-                      border="1px solid black"
-                      bg={"#121212"}
-                      color={"white"}
-                      fontWeight={"bold"}
-                    >
-                      Total: {totalAmount}
-                    </Td>
-
-                    <Td colSpan={8}></Td>
-                  </Tr>
+                 
                 </Tbody>
               </TableContainer>
             </Table>

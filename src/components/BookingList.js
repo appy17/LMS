@@ -23,7 +23,6 @@ import {
   FormLabel,
   Radio,
   useToast,
-
 } from "@chakra-ui/react";
 import axios, { all } from "axios";
 import { ChevronDownIcon } from "@chakra-ui/icons";
@@ -44,7 +43,7 @@ const BookingList = () => {
   const [constructors, setConstructors] = useState([]);
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
   const toast = useToast();
-
+  const [render, setRender] = useState(false);
 
   const [selectContructor, setSelectConstructor] = useState(["All"]);
 
@@ -99,9 +98,6 @@ const BookingList = () => {
       console.error("Error fetching booking data:", error);
     }
   };
-  useEffect(() => {
-    loadBooking();
-  }, []);
 
   const getUniqueValues = (key) => {
     return [...new Set(plotsData.map((item) => item[key]))];
@@ -274,62 +270,115 @@ const BookingList = () => {
 
   console.log("All Totle : ", allTotle);
 
-  const handleTally = async(props) => {
+  // const handleTally = async (props) => {
+  //   console.log("tallydata", props);
 
-    
+  //   // const url = "https://lkgexcel.com/backend/editplot.php";
+  //   const url = "http://localhost/backend_lms/updateTallyStatus.php";
+  //   const formData = new FormData();
+
+  //   formData.append("id", props.id);
+  //   formData.append("TallyStatus", "Tally");
+
+  //   try {
+  //     const response = await axios.post(url, formData);
+
+  //     if (response && response.data && response.data.status === "success") {
+  //       console.log(" successfully:", response.data.message);
+  //       toast({
+  //         title: "Tally successfully!",
+  //         status: "success",
+  //         duration: 3000,
+  //         isClosable: true,
+  //       });
+  //       setRender((prev) => !prev);
+  //     } else {
+  //       console.error("Error :", response.data.message);
+  //       toast({
+  //         title: "Error ",
+  //         status: "error",
+  //         duration: 3000,
+  //         isClosable: true,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error in handleEdit:", error);
+  //     toast({
+  //       title: "Error",
+  //       status: "error",
+  //       duration: 3000,
+  //       isClosable: true,
+  //     });
+  //   }
+  // };
+
+  const handleTally = async (props) => {
     console.log("tallydata", props);
 
+    const url = "http://localhost/backend_lms/updateTallyStatus.php";
+    const data = {
+        id: props.id,
+    };
+
+    try {
+        const response = await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response && response.data && response.data.status === "success") {
+            console.log(" successfully:", response.data.message);
+            toast({
+                title: "Tally successfully!",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+            });
+            setRender((prev) => !prev);
+        } else {
+            console.error("Error :", response.data.message);
+            toast({
+                title: "Error ",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
+        }
+    } catch (error) {
+        console.error("Error in handleTally:", error);
+        toast({
+            title: "Error",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+        });
+    }
+};
+
+
+  const handleNotTally = async (props) => {
+    console.log("tallydata", props);
 
     // const url = "https://lkgexcel.com/backend/editplot.php";
-    const url = "http://localhost/backend_lms/.php";
+    const url = "http://localhost/backend_lms/updateTallyStatus.php";
     const formData = new FormData();
 
     formData.append("id", props.id);
-    formData.append("projectName", props.projectName);
-    formData.append("blockName", props.blockName);
-    formData.append("bookingDate", props.bookingDate);
-    formData.append("bankAmountPayable", props.bankAmountPayable);
-    formData.append("areaSqft", props.areaSqft);
-    formData.append("broker", props.broker);
-    formData.append("cashAmountPayable", props.cashAmountPayable);
-    formData.append("constructionAmount", props.constructionAmount);
-    formData.append("constructionApplicable", props.constructionApplicable);
-    formData.append("constructionContractor", props.constructionContractor);
-    formData.append("customerAddress", props.customerAddress);
-    formData.append("customerContact", props.customerContact);
-    formData.append("customerName", props.customerName);
-    formData.append("discountApplicable", props.discountApplicable);
-    formData.append("discountPercent", props.discountPercent);
-    formData.append("grandTotal", props.grandTotal);
-    formData.append("guidelineAmount", props.guidelineAmount);
-    formData.append("maintenanceAmount", props.maintenanceAmount);
-    formData.append("miscAmount", props.miscAmount);
-    formData.append("netAmount", props.netAmount);
-    formData.append("plotNo", props.plotNo);
-    formData.append("plotType", props.plotType);
-    formData.append("rateAreaSqft", props.rateAreaSqft);
-    formData.append("registryAmount", props.registryAmount);
-    formData.append("registryGender", props.registryGender);
-    formData.append("registryPercent", props.registryPercent);
-    formData.append("remarks", props.remarks);
-    formData.append("serviceAmount", props.serviceAmount); 
-    formData.append("totalAmount", props.totalAmount);
-    formData.append("totalAmountPayable", props.totalAmountPayable);
-    // formData.append("plotType", props.);
- 
+    formData.append("TallyStatus", "Not Tally");
 
     try {
-      const response = await axios.update(url, formData);
+      const response = await axios.post(url, formData);
 
       if (response && response.data && response.data.status === "success") {
         console.log(" successfully:", response.data.message);
         toast({
-          title: "updated successfully!",
+          title: " Not Tally successfully!",
           status: "success",
           duration: 3000,
           isClosable: true,
         });
-
+        setRender((prev) => !prev);
         // fetchDataPlot();
       } else {
         console.error("Error :", response.data.message);
@@ -339,7 +388,6 @@ const BookingList = () => {
           duration: 3000,
           isClosable: true,
         });
-
       }
     } catch (error) {
       console.error("Error in handleEdit:", error);
@@ -349,21 +397,12 @@ const BookingList = () => {
         duration: 3000,
         isClosable: true,
       });
-
     }
   };
 
-
-
-
-
-
-
-
-
-
-
-
+  useEffect(() => {
+    loadBooking();
+  }, [render]);
 
   return (
     <>
@@ -854,19 +893,43 @@ const BookingList = () => {
                             ? "green.200"
                             : "transparent"
                         }
-                      
                       >
-                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{index + 1}</Td>
-                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.projectName}</Td>
-                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.blockName}</Td>
-                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.plotNo}</Td>
-                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.plotType}</Td>
-                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.customerName}</Td>
-                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.customerAddress}</Td>
-                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.customerContact}</Td>
-                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.registryGender}</Td>
-                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.broker}</Td>
-                        <Td border="1px solid black" sx={{ padding: "0 8px" }} textAlign={"right"}>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>
+                          {index + 1}
+                        </Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>
+                          {data.projectName}
+                        </Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>
+                          {data.blockName}
+                        </Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>
+                          {data.plotNo}
+                        </Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>
+                          {data.plotType}
+                        </Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>
+                          {data.customerName}
+                        </Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>
+                          {data.customerAddress}
+                        </Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>
+                          {data.customerContact}
+                        </Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>
+                          {data.registryGender}
+                        </Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>
+                          {data.broker}
+                        </Td>
+
+                        <Td
+                          border="1px solid black"
+                          sx={{ padding: "0 8px" }}
+                          textAlign={"right"}
+                        >
                           {data.areaSqft}
                         </Td>
                         <Td border="1px solid black" textAlign={"right"}>
@@ -935,18 +998,34 @@ const BookingList = () => {
                         <Td color={"white"} border="1px solid black">
                           {data.registryDate}
                         </Td>
-
-                        <Td border="1px solid black" color={"red"}>
-                          {"Not Tallied"}
+                        <Td
+                          border="1px solid black"
+                          textAlign={"right"}
+                          style={{ color: "red" }}
+                        >
+                          {data.TalliedStatus}
                         </Td>
 
+                        {/* <Td border="1px solid black" color={"red"}>
+                          {"Not Tallied"}
+                        </Td> */}
+
                         <Td border="1px solid black">
-                          <Button
-                            colorScheme="teal"
-                            onClick={() => handleTally(data)}
-                          >
-                            Tally
-                          </Button>
+                          {data.TalliedStatus === "Tallied" ? (
+                            <Button
+                              colorScheme="teal"
+                              onClick={() => handleNotTally(data)}
+                            >
+                              Not Tally
+                            </Button>
+                          ) : (
+                            <Button
+                              colorScheme="teal"
+                              onClick={() => handleTally(data)}
+                            >
+                              Tally
+                            </Button>
+                          )}
                         </Td>
                       </Tr>
                     );

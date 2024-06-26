@@ -503,34 +503,34 @@ const NewBooking = () => {
     document.getElementById("netAmount").value =
       document.getElementById("totalAmount").value;
 
-
-    // if (document.getElementById("discountApplicable").value == "Yes") {
-    //   document.getElementById("netAmount").value =
-    //     document.getElementById("totalAmount").value -
-    //     (document.getElementById("totalAmount").value / 100) *
-    //       document.getElementById("discountPercent").value;
-    // } else if (document.getElementById("discountApplicable").value == "No") {
-    //   document.getElementById("discountPercent").value = 0;
-    //   document.getElementById("netAmount").value =
-    //     document.getElementById("totalAmount").value;
-    // }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    if (document.getElementById("discountApplicable").value == "Yes") {
+      document.getElementById("netAmount").value =
+        document.getElementById("totalAmount").value -
+        (document.getElementById("totalAmount").value / 100) *
+          document.getElementById("discountPercent").value;
+    } else if (document.getElementById("discountApplicable").value == "No") {
+      document.getElementById("discountPercent").value = 0;
+      document.getElementById("netAmount").value =
+        document.getElementById("totalAmount").value;
+    }
 
     {
       // This is Previous
-      // document.getElementById("guidelineAmount").value =
-      //   plotData[0]["areaSqmt"] * master[0]["guideline"];
+      document.getElementById("guidelineAmount").value =
+        plotData[0]["areaSqmt"] * master[0]["guideline"];
     }
 
-    // if (document.getElementById("registryGender").value == "Male") {
-    //   document.getElementById("registryPercent").value =
-    //     master[0]["registryMalePercent"];
-    // }
-    // if (document.getElementById("registryGender").value == "Female") {
-    //   document.getElementById("registryPercent").value =
-    //     master[0]["registryFemalePercent"];
-    // }
+    if (document.getElementById("registryGender").value == "Male") {
+      document.getElementById("registryPercent").value =
+        master[0]["registryMalePercent"];
+    }
+    if (document.getElementById("registryGender").value == "Female") {
+      document.getElementById("registryPercent").value =
+        master[0]["registryFemalePercent"];
+    }
 
-// *****************************************************************88
+// *****************************************************************88///////////////////////////////////////////////////////////////
 
 
 if (document.getElementById("registryGender").value == "Male" && document.getElementById("discountApplicable").value == "Yes") {
@@ -628,20 +628,21 @@ if (document.getElementById("registryGender").value == "Female" && document.getE
       document.getElementById("totalAmountPayable").value =
         document.getElementById("grandTotal").value;
     }
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     {
       // This is Previous
-      // document.getElementById("bankAmountPayable").value =
-      //   (document.getElementById("guidelineAmount").value *
-      //     document.getElementById("registry").value) /
-      //   100;
+      document.getElementById("bankAmountPayable").value =
+        (document.getElementById("guidelineAmount").value *
+          document.getElementById("registry").value) /
+        100;
     }
 
-    // document.getElementById("cashAmountPayable").value =
-    //   document.getElementById("totalAmountPayable").value -
-    //   document.getElementById("bankAmountPayable").value;
+    document.getElementById("cashAmountPayable").value =
+      document.getElementById("totalAmountPayable").value -
+      document.getElementById("bankAmountPayable").value;
   };
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   useEffect(() => {
     // Call the loadContractor function when the component mounts
     loadProjects();
@@ -779,7 +780,7 @@ if (document.getElementById("registryGender").value == "Female" && document.getE
             <FormControl>
               <FormLabel>Plot Type</FormLabel>
               <Input
-                onChange={updateOnChange}
+                // onChange={updateOnChange}
                   id="plotType"
                   value={myValue}
                 type="text"
@@ -927,7 +928,7 @@ if (document.getElementById("registryGender").value == "Female" && document.getE
               <Input
                 onChange={updateOnChange}
                 id="registryAmount"
-                type="text"
+                type="number"
                 name="registryAmount"
                 //onChange={handleChange}
                 required
@@ -939,9 +940,9 @@ if (document.getElementById("registryGender").value == "Female" && document.getE
               <Input
                 onChange={updateOnChange}
                 id="serviceAmount"
-                type="text"
+                type="number"
                 name="serviceAmount"
-                //onChange={handleChange}
+                // onChange={handleChange}
                 required
               />
             </FormControl>
@@ -951,10 +952,10 @@ if (document.getElementById("registryGender").value == "Female" && document.getE
               <Input
                 onChange={updateOnChange}
                 id="maintenanceAmount"
-                type="text"
+                type="number"
                 name="maintenanceAmount"
-
-                //onChange={handleChange}
+                required
+                // onChange={handleChange}
               />
             </FormControl>
             <FormControl>
@@ -962,7 +963,7 @@ if (document.getElementById("registryGender").value == "Female" && document.getE
               <Input
                 onChange={updateOnChange}
                 id="miscAmount"
-                type="text"
+                type="number"
                 name="miscAmount"
 
                 //onChange={handleChange}

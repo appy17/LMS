@@ -55,6 +55,7 @@ const BrokerLedger = () => {
      return `${day}-${month}-${year}`;
    };
 
+
   const loadTransaction = async () => {
     let query = "SELECT * FROM brokerTransaction;";
 
@@ -144,7 +145,6 @@ const BrokerLedger = () => {
   let finalPable = 0;
   let finalPaid = 0;
 
-  console.log("aaaaaaaaaaaaa", filteredBookings);
 
   filteredBookings.forEach((obj) => {
     finalBalance += parseInt(obj.totalBalance);
@@ -155,6 +155,11 @@ const BrokerLedger = () => {
   console.log("Final Balance:", finalBalance);
   console.log("Final Payable:", finalPable);
   console.log("Final Paid:", finalPaid);
+
+
+
+
+
 
   return (
     <>
@@ -478,9 +483,10 @@ const BrokerLedger = () => {
                       <Td border="1px solid black">{data.blockName}</Td>
                       <Td border="1px solid black">{data.plotNo}</Td>
                       <Td border="1px solid black">{data.plotstatus}</Td>
-                      <Td border="1px solid black">
+                      <Td border="1px solid black">{data.RegistryDate}</Td>
+                      {/* <Td border="1px solid black">
                         {formatDate(data.transactionDate)}
-                      </Td>
+                      </Td> */}
 
                       {/* <Td border="1px solid black">
                         {formatDate(data.transactionDate)}

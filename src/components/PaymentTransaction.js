@@ -536,13 +536,16 @@ const PaymentTransaction = () => {
       document.getElementById("registryD").value +
       "');";
 
-    console.log(query);
-    let fData = new FormData();
-    fData.append("query", query);
+      let fData = new FormData();
+      fData.append("query", query);
 
+      const app = 
+          console.log("this is data from query", );
     try {
       const response = await axios.post(url, fData);
       updatePlotStatusRegistry();
+      updateRegistryDate();
+      updateRegistryDate01();
       toast({
         title: "Registry added successfully!",
         status: "success",
@@ -571,6 +574,51 @@ const PaymentTransaction = () => {
       console.log(error.toJSON());
     }
   };
+
+    const[registryDate,setRegistryDate] = useState();
+
+    const RegistryDate =  new Date(registryDate).toLocaleDateString('en-GB')
+
+
+  const updateRegistryDate = async () => {
+
+    const url = "http://localhost/backend_lms/setQuery.php";        
+    let query =
+    "UPDATE brokertransaction SET RegistryDate = '" +RegistryDate+ "' WHERE plotNo = '" +
+    plotName+
+    "';"
+    console.log("here i am coming 2");
+    
+    let fData = new FormData();
+    fData.append("query", query);
+    
+    console.log("here i am coming 3",query);
+    try {
+      const response = await axios.post(url, fData);
+      console.log("Registry date Updated");
+    } catch (error) {
+      console.log(error.toJSON());
+    }
+  };
+  const updateRegistryDate01 = async () => {
+
+    const url = "http://localhost/backend_lms/setQuery.php";        
+    let query =
+    "UPDATE booking SET RegistryDate = '" +RegistryDate+ "' WHERE plotNo = '" +
+    plotName+
+    "';"
+    
+    let fData = new FormData();
+    fData.append("query", query);
+    
+    try {
+      const response = await axios.post(url, fData);
+    } catch (error) {
+      console.log(error.toJSON());
+    }
+  };
+
+
   const loadTransaction = async (plotData) => {
     let query =
       "SELECT * FROM transaction where blockName = '" +
@@ -2314,7 +2362,7 @@ const PaymentTransaction = () => {
                     // padding={"0px 4px 0px 4px"}
                   >
                     <FormLabel fontSize={"sm"}>Registry Date</FormLabel>
-                    <Input type="date" id="registryD" w={"60%"} />
+                    <Input type="date" id="registryD" w={"60%"} onChange={(e)=>setRegistryDate(e.target.value)}/>
                   </Flex>
                 </FormControl>
               </HStack>

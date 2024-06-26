@@ -229,6 +229,26 @@
         0
       );
     };
+    const calculateTotalBalance = (bookings) => {
+       return bookings.reduce(
+        (total, booking) => total + parseFloat(booking.totalBalance),
+        0
+      );
+    };
+
+
+    const calculateBankBalance = (bookings) => {
+      return bookings.reduce(
+        (total, booking) => total + parseFloat(booking.bankBalance),
+        0
+      );
+    };
+    const calculateCashBalance = (bookings) => {
+      return bookings.reduce(
+        (total, booking) => total + parseFloat(booking.cashBalance),
+        0
+      );
+    };
     const tableRef = useRef();
     const handlePrint = useReactToPrint({
       content: () => tableRef.current,
@@ -241,6 +261,11 @@
         setButtonClicked(false); // Reset button clicked to false after print is done
       },
     });
+
+        console.log("this is date",filteredBookings);
+
+
+
     return (
       <>
         Status - {selectedStatus}
@@ -444,6 +469,69 @@
               <Table variant="simple" ref={tableRef}>
                 <TableContainer>
                   <Thead>
+
+                     {  selectedProject.length>0?
+                    <Tr>
+                      <Td colSpan={7}></Td>
+                      <Td
+                        textAlign="center"
+                        border="1px solid black"
+                        bg={"#121212"}
+                        color={"white"}
+                        fontWeight={"bold"}
+                      >
+                        Total : {selectedProject.length>0  && calculateTotalBalance(filteredBookings)}
+                      </Td>
+                      <Td
+                        textAlign="center"
+                        border="1px solid black"
+                        bg={"#121212"}
+                        color={"white"}
+                        fontWeight={"bold"}
+                      >
+                        Total : {selectedProject.length>0  && calculateBankBalance(filteredBookings)}
+                      </Td>
+                      <Td
+                        textAlign="center"
+                        border="1px solid black"
+                        bg={"#121212"}
+                        color={"white"}
+                        fontWeight={"bold"}
+                      >
+                        Total : {selectedProject.length>0  && calculateCashBalance(filteredBookings)}
+                      </Td>
+                      <Td
+                        textAlign="center"
+                        border="1px solid black"
+                        bg={"#121212"}
+                        color={"white"}
+                        fontWeight={"bold"}
+                      >
+                        Total : {selectedProject.length>0  && calculateTotalReceived(filteredBookings)}
+                      </Td>
+
+                      <Td
+                        textAlign="center"
+                        border="1px solid black"
+                        bg={"#121212"}
+                        color={"white"}
+                        fontWeight={"bold"}
+                      >
+                        Total : {selectedProject.length>0  && calculateBankReceived(filteredBookings)}
+                      </Td>
+
+                      <Td
+                        textAlign="center"
+                        border="1px solid black"
+                        bg={"#121212"}
+                        color={"white"}
+                        fontWeight={"bold"}
+                      >
+                        Total : {selectedProject.length>0  && calculateCashReceived(filteredBookings)}
+                      </Td>
+                    </Tr>:" "
+                    
+                    }
                     <Tr border="1px solid black" bg={"#121212"}>
                       <Th
                         border="1px solid black"
@@ -851,7 +939,7 @@
                                     className="print"
                                     textAlign={"center"}
                                   >
-                                    {rd.registryDate}
+                                    {rd.registryDate} 
                                   </Td>
                                 ))
                               ) : (
@@ -867,40 +955,8 @@
                           ))}
                       </Tr>
                     ))}
-                   {  selectedProject.length>0?
-                    <Tr>
-                      <Td colSpan={10}></Td>
-                      <Td
-                        textAlign="center"
-                        border="1px solid black"
-                        bg={"#121212"}
-                        color={"white"}
-                        fontWeight={"bold"}
-                      >
-                        Total : {selectedProject.length>0  && calculateTotalReceived(filteredBookings)}
-                      </Td>
-
-                      <Td
-                        textAlign="center"
-                        border="1px solid black"
-                        bg={"#121212"}
-                        color={"white"}
-                        fontWeight={"bold"}
-                      >
-                        Total : {selectedProject.length>0  && calculateBankReceived(filteredBookings)}
-                      </Td>
-
-                      <Td
-                        textAlign="center"
-                        border="1px solid black"
-                        bg={"#121212"}
-                        color={"white"}
-                        fontWeight={"bold"}
-                      >
-                        Total : {selectedProject.length>0  && calculateCashReceived(filteredBookings)}
-                      </Td>
-                    </Tr>:" "
-  }
+                 
+  
                   </Tbody>
                 </TableContainer>
               </Table>

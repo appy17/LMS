@@ -100,6 +100,8 @@ if(selectedProject.length>0){
       setter([...state, value]);
     }
   };
+
+  
  
 
   const loadBooking = async () => {
@@ -174,21 +176,32 @@ if(selectedProject.length>0){
   };
 
   const formatDate = (dateString) => {
-    const [year, month, day] = dateString.split('-');
-    return `${day}/${month}/${year}`;
+    const [day, month, year] = dateString.split('-');
+    return `${day}${month}${year}`;
+  };
+
+
+
+
+  const formatDate1 = (prop) => {
+    console.log("this is props",prop);
+    const [year, month, day] = prop.split('/');
+    return `${day}${month}${year}`;
   };
 
   const handleFind = () => {
-    console.log("From Date:", formatDate(selectedFromDate));
-    console.log("To Date:", formatDate(selectedToDate));
-console.log("status",status)
+    console.log("this is selected date",selectedFromDate);
+    console.log("From Date:",formatDate1(selectedFromDate));
+    console.log("To Date:",formatDate1(selectedToDate));
+// console.log("status",status)
     // Example filter logic (commented out)
-    const filterArray = status.filter(item => item.bookingDate >= selectedFromDate && item.bookingDate <= selectedToDate);
-    setBooking(filterArray);
+    // const filterArray = status.filter(item => item.bookingDate >= selectedFromDate && item.bookingDate <= selectedToDate);
+    // setBooking(filterArray);
   };
 
+console.log("selectedFromDate",selectedFromDate);
 
-
+  
   const getUniqueValues = (key) => {
     return [...new Set(bookings.map((item) => item[key]))];//
   };
@@ -372,8 +385,12 @@ const plotStatus = getUniqueValues("plotStatus");
     } catch (error) {
       console.log("error occur to fetch",error);
     }
-   
+    
   } 
+  
+  console.log("hey pavan this is filteredBookings",filteredBookings);
+  console.log("hey pavan this is status",status);
+
 
   
 
